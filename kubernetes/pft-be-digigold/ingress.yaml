@@ -1,0 +1,25 @@
+
+---
+apiVersion: networking.k8s.io/v1  
+kind: Ingress
+metadata:
+  name: pft-be-digigold-ing
+  namespace: pft-be-digigold
+  labels:
+    app: pft-be-digigold
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/preserve-host: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: pft-be-digigolds-pft-be-digigolds-ing-mdw@kubernetescrd  # Corrected middleware reference
+spec:
+  rules:
+  - host: "<hostname>"
+    http:
+      paths:
+      - pathType: Prefix  # Added pathType
+        path: /digigold
+        backend:
+          service:
+            name: pft-be-digigold-svc
+            port:
+              number: 8000  # Changed servicePort to number

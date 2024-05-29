@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pft-be-grp-insurance-svc
+  namespace: pft-be-grp-insurance
+  labels:
+    app: pft-be-grp-insurance
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: http-5000  # Updated port name
+      port: 7070
+      targetPort: 7070
+  selector:
+    app: pft-be-grp-insurance

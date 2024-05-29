@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pft-be-digigold-app
+  namespace: pft-be-digigold
+  labels:
+    app: pft-be-digigold
+  annotations: 
+    secrets.infisical.com/auto-reload: "true" # <- redeployment annotation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pft-be-digigold
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pft-be-digigold
+    spec:      
+      containers:
+      - name: pft-be-digigold
+        image: <docker image>
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "150m"
+        #   limits:
+        #     memory: "300Mi"
+        #     cpu: "300m"
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: managed-secret # managed secret name
+        # envFrom:
+        # - configMapRef:
+        #     name: pft-be-digigold-cfg
+        # - secretRef:
+        #     name: pft-be-digigold-srt
+        # command: ["npm", "run", "start:prod"]
+        # test

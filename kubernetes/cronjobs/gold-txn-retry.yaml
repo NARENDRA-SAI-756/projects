@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gold-txn-retry
+  namespace: cronjobs
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: gold-txn-retry-image
+            image: curlimages/curl:latest
+            env:
+              - name: CURL_URL
+                value: "<api endpoint>"
+          restartPolicy: OnFailure

@@ -1,0 +1,25 @@
+
+---
+apiVersion: networking.k8s.io/v1  
+kind: Ingress
+metadata:
+  name: pft-be-sikka-shortener-ing
+  namespace: pft-be-sikka-shortener
+  labels:
+    app: pft-be-sikka-shortener
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/preserve-host: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: pft-be-sikka-shorteners-pft-be-sikka-shorteners-ing-mdw@kubernetescrd  # Corrected middleware reference
+spec:
+  rules:
+  - host: "<hostname>"
+    http:
+      paths:
+      - pathType: Prefix  # Added pathType
+        path: /srt
+        backend:
+          service:
+            name: pft-be-sikka-shortener-svc
+            port:
+              number: 8000  # Changed servicePort to number

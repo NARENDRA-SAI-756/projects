@@ -1,0 +1,25 @@
+
+---
+apiVersion: networking.k8s.io/v1  
+kind: Ingress
+metadata:
+  name: pft-be-bifrost-ing
+  namespace: pft-be-bifrost
+  labels:
+    app: pft-be-bifrost
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/preserve-host: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: pft-be-bifrosts-pft-be-bifrosts-ing-mdw@kubernetescrd  # Corrected middleware reference
+spec:
+  rules:
+  - host: "<hostname>"
+    http:
+      paths:
+      - pathType: Prefix  # Added pathType
+        path: /bifrost
+        backend:
+          service:
+            name: pft-be-bifrost-svc
+            port:
+              number: 8000  # Changed servicePort to number

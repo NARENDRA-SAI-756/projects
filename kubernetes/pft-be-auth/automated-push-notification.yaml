@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: automated-push-notification
+  namespace: pft-be-auth
+spec:
+  schedule: "0 9,12,15,18 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: automated-push-notification
+            image: curlimages/curl:latest
+            command:
+            - "curl"
+            - "--location"
+            - "--request"
+            - "GET"
+            - "<api endpoint>"
+          restartPolicy: OnFailure

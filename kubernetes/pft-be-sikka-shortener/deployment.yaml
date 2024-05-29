@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pft-be-sikka-shortener-app
+  namespace: pft-be-sikka-shortener
+  labels:
+    app: pft-be-sikka-shortener
+  annotations: 
+    secrets.infisical.com/auto-reload: "true" # <- redeployment annotation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pft-be-sikka-shortener
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pft-be-sikka-shortener
+    spec:      
+      containers:
+      - name: pft-be-sikka-shortener
+        image: <docker image>
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "150m"
+          limits:
+            memory: "300Mi"
+            cpu: "300m"
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: managed-secret # managed secret name
+        # envFrom:
+        # - configMapRef:
+        #     name: pft-be-sikka-shortener-cfg
+        # - secretRef:
+        #     name: pft-be-sikka-shortener-srt
+        # command: ["npm", "run", "start:prod"]

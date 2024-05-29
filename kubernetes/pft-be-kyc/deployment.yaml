@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pft-be-kyc-app
+  namespace: pft-be-kyc
+  labels:
+    app: pft-be-kyc
+  annotations: 
+    secrets.infisical.com/auto-reload: "true" # <- redeployment annotation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pft-be-kyc
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pft-be-kyc
+    spec:      
+      containers:
+      - name: pft-be-kyc
+        image: <docker image>
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "150m"
+          limits:
+            memory: "300Mi"
+            cpu: "300m"
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: managed-secret # managed secret name
+        # envFrom:
+        # - configMapRef:
+        #     name: pft-be-kyc-cfg
+        # - secretRef:
+        #     name: pft-be-kyc-srt
+        # command: ["npm", "run", "start:prod"]

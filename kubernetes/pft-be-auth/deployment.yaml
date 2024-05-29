@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pft-be-auth-app
+  namespace: pft-be-auth
+  labels:
+    app: pft-be-auth
+  annotations: 
+    secrets.infisical.com/auto-reload: "true" # <- redeployment annotation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pft-be-auth
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: pft-be-auth
+    spec:      
+      containers:
+      - name: pft-be-auth
+        image: <docker image>
+        imagePullPolicy: IfNotPresent
+        # resources:
+        #   requests:
+        #     memory: "1500Mi"
+        #     cpu: "150m"
+        #   limits:
+        #     memory: "500Mi"
+        #     cpu: "300m"
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: managed-secret # managed secret name
+        # envFrom:
+        # - configMapRef:
+        #     name: pft-be-auth-cfg
+        # - secretRef:
+        #     name: pft-be-auth-srt
+        # command: ["npm", "run", "start:prod"]

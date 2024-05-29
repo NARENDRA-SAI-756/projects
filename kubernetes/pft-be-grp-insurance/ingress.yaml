@@ -1,0 +1,25 @@
+
+---
+apiVersion: networking.k8s.io/v1  
+kind: Ingress
+metadata:
+  name: pft-be-grp-insurance-ing
+  namespace: pft-be-grp-insurance
+  labels:
+    app: pft-be-grp-insurance
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/preserve-host: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: pft-be-grp-insurances-pft-be-grp-insurances-ing-mdw@kubernetescrd  # Corrected middleware reference
+spec:
+  rules:
+  - host: "<hostname>"
+    http:
+      paths:
+      - pathType: Prefix  # Added pathType
+        path: /grp_insurance
+        backend:
+          service:
+            name: pft-be-grp-insurance-svc
+            port:
+              number: 7070  # Changed servicePort to number

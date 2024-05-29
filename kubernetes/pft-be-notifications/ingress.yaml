@@ -1,0 +1,25 @@
+
+---
+apiVersion: networking.k8s.io/v1  
+kind: Ingress
+metadata:
+  name: pft-be-notifications-ing
+  namespace: pft-be-notifications
+  labels:
+    app: pft-be-notifications
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/preserve-host: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: pft-be-notificationss-pft-be-notificationss-ing-mdw@kubernetescrd  # Corrected middleware reference
+spec:
+  rules:
+  - host: "<hostname>"
+    http:
+      paths:
+      - pathType: Prefix  # Added pathType
+        path: /notification
+        backend:
+          service:
+            name: pft-be-notifications-svc
+            port:
+              number: 8000  # Changed servicePort to number

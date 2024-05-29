@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pft-be-bifrost-svc
+  namespace: pft-be-bifrost
+  labels:
+    app: pft-be-bifrost
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: http-5000  # Updated port name
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: pft-be-bifrost
